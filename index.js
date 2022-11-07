@@ -22,6 +22,28 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    const serviceCollection = client
+      .db("plastic-surgeon-db")
+      .collection("services");
+
+    // Add Service
+    app.post("/services", async (req, res) => {
+      const service = req.body;
+      const result = await serviceCollection.insertOne(service);
+      res.send(result);
+    });
+
+    // Get Services
+    app.get("/services", async (req, res) => {
+      const noOfService = parseInt(req.query.num);
+      const query = {};
+      const options = {
+        sort: { time: -1 },
+      };
+      const cursor = serviceCollection.find(query, options);
+      const result = await cursor.limit(noOfService).toArray();
+      res.send(result);
+    });
   } finally {
   }
 }
