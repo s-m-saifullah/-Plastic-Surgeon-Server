@@ -26,6 +26,10 @@ async function run() {
       .db("plastic-surgeon-db")
       .collection("services");
 
+    const reviewCollection = client
+      .db("plastic-surgeon-db")
+      .collection("reviews");
+
     // Add Service
     app.post("/services", async (req, res) => {
       const service = req.body;
@@ -56,7 +60,18 @@ async function run() {
     // Add Review
     app.post("/review", async (req, res) => {
       const review = req.body;
-      console.log(review);
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
+
+    // Get Reviews
+    app.get("/review/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { serviceId: id };
+      const cursor = reviewCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
     });
   } finally {
   }
