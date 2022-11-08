@@ -51,7 +51,12 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const result = await serviceCollection.findOne(query);
       res.send(result);
-      console.log(result);
+    });
+
+    // Add Review
+    app.post("/review", async (req, res) => {
+      const review = req.body;
+      console.log(review);
     });
   } finally {
   }
