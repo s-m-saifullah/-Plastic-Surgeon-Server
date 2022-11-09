@@ -67,9 +67,27 @@ async function run() {
     // Get Reviews
     app.get("/review/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
+      const options = {
+        sort: {
+          "time.milliseconds": -1,
+        },
+      };
       const query = { serviceId: id };
-      const cursor = reviewCollection.find(query);
+      const cursor = reviewCollection.find(query, options);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // Get Reviews By User ID
+    app.get("/reviewByUid/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { uid: id };
+      const options = {
+        sort: {
+          "time.milliseconds": -1,
+        },
+      };
+      const cursor = reviewCollection.find(query, options);
       const result = await cursor.toArray();
       res.send(result);
     });
